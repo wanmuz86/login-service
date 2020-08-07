@@ -7,7 +7,8 @@ const UserModel = new mongoose.Schema({
 
 
 UserModel.pre('save', function(callback){
-	if (!user.isModified('modified')) return callback();
+	var user = this
+	if (!user.isModified('password')) return callback();
 
 	bcrypt.genSalt(5, function(err, salt){
 		if (err) return callback(err);
