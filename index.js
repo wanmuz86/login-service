@@ -26,23 +26,26 @@ router.post('/register', (req,res)=>{
 	})
 
 })
-
+// something is broken with my pre save
 router.post('/login', (req,res)=>{
 	User.findOne({email:req.body.email}, (err,user)=>{
 		if (err) res.json({message:'error '+err});
 		if (user){
-			if (user.password === req.body.password){
-				res.json({message:'OK. Authenticated'})
+			user.verifyPassword(req.body.password, (err,isMatch)=>{
+				if (!err &isMatch){
+					res.json({message:"Auhenticated!"})
+				} 
+				else {res.json({error:"error"})
 			}
-			else {
-				res.json({message:'Wrong password'})
-			}
+
+	})
 		}
 		else {
 			res.json({message:'User not found'})
 		}
 	})
 })
+
 app.use('/api',router);
 
 app.listen(port);
